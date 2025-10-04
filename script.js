@@ -1,34 +1,32 @@
-
 async function buscarCep() {
     
-    let inputValue = document.getElementById('cep').value
-    let resultado = document.getElementById('result')
+    let inputValue = document.getElementById('cep').value;
+    let resultado = document.getElementById('result');
 
-    let cep = inputValue.replace(/\D/g, '')
+    let cep = inputValue.replace(/\D/g, '');
 
-    // console.log(cep)
-
-    if(!cep || cep.length !==8) {
-        resultado.innerHTML = `
+    if(!cep) {
+     return resultado.innerHTML = `
             <div class="erro">
                 <p>Por favor, insira um CEP.</p>
-             </div>
-        `
-        return;
+             </div>`;
+    }
+    
+    if(cep.length !==8) {
+     return resultado.innerHTML = `
+            <div class="erro">
+                <p>Por favor, insira um CEP com 8 digitos.</p>
+             </div>`;
     }
 
-     let response = await fetch( `https://viacep.com.br/ws/${cep}/json/`)
-     let data = await response.json()
-
-    //  console.log(data)
+     let response = await fetch( `https://viacep.com.br/ws/${cep}/json/`);
+     let data = await response.json();
 
      if(data.erro) {
-        resultado.innerHTML = `
+      return resultado.innerHTML = `
              <div class="erro">
                 <p>CEP inválido. Por favor, tente novamente.</p>
-             </div>
-        `
-        return;
+             </div>`;
      }
 
      resultado.innerHTML = `
@@ -38,6 +36,7 @@ async function buscarCep() {
                 <p><strong>Bairro:</strong> ${data.bairro}</p>
                 <p><strong>Cidade:</strong>  ${data.localidade}</p>
                 <p><strong>Estado:</strong> ${data.uf}</p>
-             </div>
-     `
+             </div>`;
+    
+    document.getElementById('cep').value = '';
 }
